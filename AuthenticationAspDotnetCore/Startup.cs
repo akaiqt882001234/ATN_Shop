@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using AuthenticationAspDotnetCore.Data;
 using AuthenticationAspDotnetCore.Initializer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,6 +40,11 @@ namespace AuthenticationAspDotnetCore
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IDbInitailizer, DbInitailizer>();
+            
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
+            });
             
             services.ConfigureApplicationCookie(options =>
             {
@@ -70,6 +77,10 @@ namespace AuthenticationAspDotnetCore
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

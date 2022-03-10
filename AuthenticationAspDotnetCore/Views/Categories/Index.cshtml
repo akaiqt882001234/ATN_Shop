@@ -6,22 +6,29 @@
 
 <div class="row">
     <div class="col-6">
-        <h1>Category Table</h1>
+        <h1 class="text-primary">List of Shop </h1>
     </div>
-    <div class="col-6">
-        <a asp-controller="Categories" asp-action="Upsert" class="btn btn-success">Create New Category</a>
+    <div class="col-6 text-right">
+        <a asp-controller="Categories" asp-action="Upsert" class="btn btn-primary">Create New Shop</a>
     </div>
 </div>
-<table class="table">
+
+<div>
+    <form class="form-inline my-2 my-lg-0 float-right">
+        <input id="myInput" class="form-control mr-sm-2" type="text" placeholder="Search">
+    </form>
+</div>
+
+<table class="table ">
     <thead>
     <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Description</th>
-        <th scope="col">Action</th>
+        <th>#No</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Action</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id="tblData">
     @foreach (var obj in @Model)
     {
         <tr>
@@ -36,3 +43,17 @@
     }
     </tbody>
 </table>
+
+@section Scripts
+{
+<script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#tblData tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+}

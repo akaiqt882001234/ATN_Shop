@@ -17,8 +17,7 @@ namespace AuthenticationAspDotnetCore.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public IActionResult Index()
         {
-            var listAllData = _db.Categories.ToList();
-            return View(listAllData);
+            return View(_db.Categories.ToList());
         }
 
         
